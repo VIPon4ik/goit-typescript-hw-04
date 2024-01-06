@@ -1,5 +1,23 @@
 import React, {useReducer} from "react";
 
+type RequestStep = 'start' | 'pending' | 'finished' | 'idle';
+
+interface State {
+  isRequestInProgress: boolean ;
+  requestStep: RequestStep;
+}
+
+enum ActionTypes {
+  'START_REQUEST',
+  'PENDING_REQUEST',
+  'FINISH_REQUEST',
+  'RESET_REQUEST'
+}
+
+interface Action {
+  type: ActionTypes,
+}
+
 const initialState: State = {
   isRequestInProgress: false,
   requestStep: 'idle',
@@ -7,13 +25,13 @@ const initialState: State = {
 
 function requestReducer(state: State, action: Action): State {
   switch (action.type) {
-    case 'START_REQUEST':
+    case ActionTypes.START_REQUEST:
       return { ...state, isRequestInProgress: true, requestStep: 'start' };
-    case 'PENDING_REQUEST':
+    case ActionTypes.PENDING_REQUEST:
       return { ...state, isRequestInProgress: true, requestStep: 'pending' };
-    case 'FINISH_REQUEST':
+    case ActionTypes.FINISH_REQUEST:
       return { ...state, isRequestInProgress: false, requestStep: 'finished' };
-    case 'RESET_REQUEST':
+    case ActionTypes.RESET_REQUEST:
       return { ...state, isRequestInProgress: false, requestStep: 'idle' };
     default:
       return state;
@@ -24,19 +42,19 @@ export function RequestComponent() {
   const [requestState, requestDispatch] = useReducer(requestReducer, initialState);
 
   const startRequest = () => {
-    requestDispatch({ type: 'START_REQUEST' });
+    requestDispatch({ type: ActionTypes.START_REQUEST });
     // Імітуємо запит до сервера
     setTimeout(() => {
-      requestDispatch({ type: 'PENDING_REQUEST' });
+      requestDispatch({ type: ActionTypes.PENDING_REQUEST });
       // Імітуємо отримання відповіді від сервера
       setTimeout(() => {
-        requestDispatch({ type: 'FINISH_REQUEST' });
+        requestDispatch({ type: ActionTypes.FINISH_REQUEST });
       }, 2000);
     }, 2000);
   };
 
   const resetRequest = () => {
-    requestDispatch({ type: 'RESET_REQUEST' });
+    requestDispatch({ type: ActionTypes.RESET_REQUEST });
   };
 
   return (
