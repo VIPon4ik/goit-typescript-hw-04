@@ -5,7 +5,7 @@ type MenuIds = "first" | "second" | "last";
 type Menu = { id: MenuIds; title: string };
 
 interface SelectedMenu {
-  id: MenuIds | undefined;
+  id: MenuIds;
 }
 
 interface MenuSelected {
@@ -13,11 +13,11 @@ interface MenuSelected {
 }
 
 interface MenuAction {
-  onSelectedMenu: (obj:SelectedMenu) => void,
+  onSelectedMenu: (obj: SelectedMenu) => void,
 }
 
 const MenuSelectedContext = createContext<MenuSelected>({
-  selectedMenu: { id: undefined},
+  selectedMenu: { id: 'first' },
 });
 
 
@@ -30,8 +30,7 @@ type PropsProvider = {
 };
 
 function MenuProvider({ children }: PropsProvider) {
-  // Додати тип для SelectedMenu він повинен містити { id }
-  const [selectedMenu, setSelectedMenu] = useState<SelectedMenu>({ id: undefined });
+  const [selectedMenu, setSelectedMenu] = useState<SelectedMenu>({ id: 'first' });
 
   const menuContextAction = useMemo(
     () => ({
@@ -57,7 +56,7 @@ function MenuProvider({ children }: PropsProvider) {
 }
 
 type PropsMenu = {
-  menus:Menu[],
+  menus: Menu[],
 };
 
 function MenuComponent({ menus }: PropsMenu) {
